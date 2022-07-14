@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import '@/assets/reset.css'
+import './assets/js/element.ts'
 
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'

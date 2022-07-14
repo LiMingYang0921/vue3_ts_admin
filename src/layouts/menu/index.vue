@@ -26,6 +26,7 @@ export default defineComponent({
         }, 300)
       }
     })
+
     return { store, isCollapse }
   }
 })
@@ -34,20 +35,24 @@ export default defineComponent({
 .menu_box {
   display: flex;
   flex-direction: column;
+
   .title {
     display: flex;
     align-items: center;
     min-height: 50px;
+
     .logo {
       width: 64px;
       display: flex;
       justify-content: center;
-      img{
+
+      img {
         width: 32px;
         height: 32px;
       }
     }
-    h1{
+
+    h1 {
       max-width: calc(200px - 64px);
     }
   }

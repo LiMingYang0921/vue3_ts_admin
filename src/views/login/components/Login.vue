@@ -107,8 +107,6 @@ export default defineComponent({
     const { loading, ruleForm, rules, ruleFormRef, submitForm } = effectForm()
 
     const goRegisterClick = () => {
-      console.log(123123)
-
       ctx.emit('goRegister')
     }
 

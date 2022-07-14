@@ -6,7 +6,6 @@ export default createStore({
   },
   getters: {
     menuIsCollapse (state) {
-      console.log(state.menuIsCollapse)
       if (state.menuIsCollapse) {
         return state.menuIsCollapse
       }

@@ -36,12 +36,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
 .page {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  overflow-y: hidden;
   background-color: rgb(249, 252, 255);
   margin: 0;
   padding: 0;
