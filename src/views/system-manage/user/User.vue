@@ -1,7 +1,14 @@
 <template>
   <div class="user">
     <Table :loading="loading" :tableData="tableData" :tableColumn="tableColumn" :paginationData="paginationData"
-      @limitChange="limitChange" @pageChange="pageChange" />
+      @limitChange="limitChange" @pageChange="pageChange">
+      <template v-slot:date>
+        <a href="">时间</a>
+      </template>
+      <template v-slot:name>
+        <a href="">姓名</a>
+      </template>
+    </Table>
   </div>
 </template>
 
@@ -15,9 +22,9 @@ export default defineComponent({
   setup () {
     const loading = ref<boolean>(false)
     const tableColumn = reactive<Array<ITableColumn>>([{
-      label: '时间', prop: 'date'
+      label: '时间', prop: 'date', headerSlots: 'date'
     }, {
-      label: '姓名', prop: 'name'
+      label: '姓名', prop: 'name', headerSlots: 'name'
     }, {
       label: '地址', prop: 'address'
     }])

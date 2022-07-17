@@ -16,7 +16,8 @@ interface ITableColumn {
   sortable?: boolean | string,
   sortMethod?: (a: number, b: number) => number,
   align?: 'left' | 'center' | 'right',
-  className?: string
+  className?: string,
+  headerSlots?: string
 }
 
 export { IPaginationData, ITableColumn }

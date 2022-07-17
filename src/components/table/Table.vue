@@ -2,7 +2,11 @@
   <div class="table_page">
     <div class="table_box">
       <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData">
-        <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="item.prop" :label="item.label" />
+        <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="item.prop" :label="item.label">
+          <template v-if="item.headerSlots" #header>
+            <slot :name="item.headerSlots"></slot>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="pagination">
@@ -42,6 +46,8 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
+    console.log(ctx.slots)
+    const slots = ctx.slots
     const elPagination = ref()
     const tableMinWidth = ref<number>(0)
     onMounted(() => {
@@ -54,7 +60,7 @@ export default defineComponent({
       ctx.emit('pageChange', val)
     }
     return {
-      elPagination, tableMinWidth, handleSizeChange, handleCurrentChange
+      slots, elPagination, tableMinWidth, handleSizeChange, handleCurrentChange
     }
   }
 })
