@@ -1,64 +1,73 @@
 <template>
-  <div style="min-width: 800px">
-    <el-table :data="tableData">
-      <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="item.prop" :label="item.label" />
-    </el-table>
-    <div class="pagination">
-      <el-pagination v-model:currentPage="currentPage4" v-model:page-size="pageSize4" :page-sizes="[100, 200, 300, 400]"
-        :background="true" layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
-        @current-change="handleCurrentChange" />
-    </div>
+  <div class="user">
+    <Table :loading="loading" :tableData="tableData" :tableColumn="tableColumn" :paginationData="paginationData"
+      @limitChange="limitChange" @pageChange="pageChange" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
+
+import Table from '@/components/table/Table.vue'
+import { IPaginationData, ITableColumn } from '@/components/table/interface'
 export default defineComponent({
+  components: { Table },
   setup () {
-    const tableData = [{
-      date: '2016-05-03',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles'
-    },
-    {
-      date: '2016-05-02',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles'
-    },
-    {
-      date: '2016-05-04',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles'
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles'
-    }]
-    const tableColumn = [{
+    const loading = ref<boolean>(false)
+    const tableColumn = reactive<Array<ITableColumn>>([{
       label: '时间', prop: 'date'
     }, {
       label: '姓名', prop: 'name'
     }, {
       label: '地址', prop: 'address'
-    }]
+    }])
 
-    const pageSize4 = ref(100)
-    const currentPage4 = ref(4)
-    const handleSizeChange = (val: number) => {
-      console.log(`${val} items per page`)
+    const tableData = ref<Array<any>>([])
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      tableData.value = [{
+        date: '2016-05-03',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-02',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-04',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-01',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      }]
+    }, 1000)
+
+    const paginationData = reactive<IPaginationData>({
+      page: 1,
+      limit: 10,
+      total: 1000
+    })
+
+    const limitChange = (val: number) => {
+      paginationData.limit = val
+      console.log('limit', paginationData.limit)
     }
-    const handleCurrentChange = (val: number) => {
-      console.log(`current page: ${val}`)
+    const pageChange = (val: number) => {
+      paginationData.page = val
+      console.log('page', paginationData.page)
     }
-    return { tableData, tableColumn, pageSize4, currentPage4, handleSizeChange, handleCurrentChange }
+    return { tableData, tableColumn, paginationData, loading, limitChange, pageChange }
   }
 })
 </script>
 <style lang="scss" scoped>
-.pagination {
-  display: flex;
-  flex-direction: row-reverse;
-  margin: 18px;
+.user {
+  // width: 100%;
 }
 </style>

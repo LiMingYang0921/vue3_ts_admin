@@ -1,10 +1,11 @@
 <template>
-  <div>角色角色角色角色角色</div>
+  <div class="role">角色角色角色角色角色</div>
 </template>
 
 <script lang="ts">
-export default {
-}
+import { defineComponent } from 'vue'
+export default defineComponent({
+})
 </script>
 <style lang="scss" scoped>
 </style>
