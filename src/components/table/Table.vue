@@ -20,47 +20,36 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, onMounted } from 'vue'
-import { IPaginationData, ITableColumn } from './interface'
+import { defineComponent, ref, onMounted, ExtractPropTypes, SetupContext } from 'vue'
+import { IPaginationData } from './interface'
+import { props } from './props'
+export type ComponentProps = ExtractPropTypes<typeof props>
+const paginationChange = (paginationData: IPaginationData, ctx: SetupContext) => {
+  const handleCurrentChange = (val: number) => {
+    ctx.emit('paginationDataChange', {
+      page: val,
+      limit: paginationData.limit
+    })
+  }
+  const handleSizeChange = (val: number) => {
+    ctx.emit('paginationDataChange', {
+      page: paginationData.page,
+      limit: val
+    })
+  }
+  return { handleSizeChange, handleCurrentChange }
+}
 export default defineComponent({
-  props: {
-    loading: {
-      require: true,
-      type: Boolean
-    },
-    tableData: Array,
-    tableColumn: Array as PropType<Array<ITableColumn>>,
-    paginationData: {
-      require: true,
-      type: Object as PropType<IPaginationData>,
-      default: function () {
-        return {
-          page: 1,
-          limit: 10
-        }
-      }
-    },
-    limitList: {
-      require: false,
-      default: () => [10, 20, 30]
-    }
-  },
-  setup (props, ctx) {
-    console.log(ctx.slots)
-    const slots = ctx.slots
+  props,
+  setup (props: ComponentProps, ctx: SetupContext) {
     const elPagination = ref()
     const tableMinWidth = ref<number>(0)
     onMounted(() => {
       tableMinWidth.value = elPagination?.value?.$el.clientWidth || 0
     })
-    const handleSizeChange = (val: number) => {
-      ctx.emit('limitChange', val)
-    }
-    const handleCurrentChange = (val: number) => {
-      ctx.emit('pageChange', val)
-    }
+    const { handleCurrentChange, handleSizeChange } = paginationChange(props.paginationData, ctx)
     return {
-      slots, elPagination, tableMinWidth, handleSizeChange, handleCurrentChange
+      elPagination, tableMinWidth, handleSizeChange, handleCurrentChange
     }
   }
 })
