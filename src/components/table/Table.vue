@@ -3,8 +3,11 @@
     <div class="table_box">
       <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData">
         <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="item.prop" :label="item.label">
-          <template v-if="item.headerSlots" #header>
-            <slot :name="item.headerSlots"></slot>
+          <template v-if="item.headerSlot" #header="scope">
+            <slot :name="item.headerSlot" :scope="scope"></slot>
+          </template>
+          <template v-if="item.slot" #default="scope">
+            <slot :name="item.slot" :scope="scope" />
           </template>
         </el-table-column>
       </el-table>
@@ -68,7 +71,6 @@ export default defineComponent({
     }
 
     .el_pagination {
-      flex: 1;
       margin: 18px;
     }
   }

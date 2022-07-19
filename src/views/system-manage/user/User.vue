@@ -2,11 +2,17 @@
   <div class="user">
     <Table :loading="loading" :tableData="tableData" :tableColumn="tableColumn" :paginationData="paginationData"
       @paginationDataChange="paginationDataChange">
-      <template v-slot:date>
-        <a href="">时间</a>
-      </template>
-      <template v-slot:name>
+      <template v-slot:dateHeader>
         <a href="">姓名</a>
+      </template>
+      <template v-slot:nameHeader>
+        <a href="">姓名</a>
+      </template>
+      <template v-slot:name="{ scope }">
+        <a @click="click(scope)">{{ scope.row.name }}</a>
+      </template>
+      <template v-slot:operate="{ scope }">
+        <a @click="click(scope)">点击</a>
       </template>
     </Table>
   </div>
@@ -22,11 +28,13 @@ export default defineComponent({
   setup () {
     const loading = ref<boolean>(false)
     const tableColumn = reactive<Array<ITableColumn>>([{
-      label: '时间', prop: 'date', headerSlots: 'date'
+      label: '时间', prop: 'date', headerSlot: 'dateHeader'
     }, {
-      label: '姓名', prop: 'name', headerSlots: 'name'
+      label: '姓名', prop: 'name', slot: 'name', headerSlot: 'nameHeader'
     }, {
       label: '地址', prop: 'address'
+    }, {
+      label: '操作', slot: 'operate'
     }])
 
     const tableData = ref<Array<any>>([])
@@ -39,12 +47,32 @@ export default defineComponent({
         address: 'No. 189, Grove St, Los Angeles'
       },
       {
-        date: '2016-05-02',
-        name: 'Tom',
+        date: '2016-05-01',
+        name: 'Tom1',
         address: 'No. 189, Grove St, Los Angeles'
       },
       {
         date: '2016-05-04',
+        name: 'Tom1',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-022',
+        name: 'Tom2',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-041',
+        name: 'Tom3',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-024',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      },
+      {
+        date: '2016-05-046',
         name: 'Tom',
         address: 'No. 189, Grove St, Los Angeles'
       },
@@ -68,10 +96,12 @@ export default defineComponent({
         loading.value = false
       }, 150)
     }
-    return { tableData, tableColumn, paginationData, loading, paginationDataChange }
+    const click = (scope: object) => {
+      console.log(scope)
+    }
+    return { tableData, tableColumn, paginationData, loading, paginationDataChange, click }
   }
 })
 </script>
 <style lang="scss" scoped>
-
 </style>

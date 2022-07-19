@@ -6,7 +6,7 @@ interface IPaginationData {
 
 interface ITableColumn {
   label: string,
-  prop: string,
+  prop?: string,
   type?: string,
   index?: string | ((index: number) => void),
   columnKey?: string,
@@ -17,7 +17,8 @@ interface ITableColumn {
   sortMethod?: (a: number, b: number) => number,
   align?: 'left' | 'center' | 'right',
   className?: string,
-  headerSlots?: string
+  headerSlot?: string,
+  slot?: string
 }
 
 export { IPaginationData, ITableColumn }
