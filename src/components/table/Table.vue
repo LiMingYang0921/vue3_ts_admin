@@ -1,8 +1,14 @@
+<!-- eslint-disable vue/valid-v-slot -->
 <template>
   <div class="table_page">
     <div class="table_box">
-      <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData">
-        <el-table-column v-for="(item, index) in tableColumn" :key="index" :prop="item.prop" :label="item.label">
+      <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData" :border="border"
+        :height="height" @selection-change="selectionChange" @select="select" @select-all="selectAll">
+        <el-table-column v-for="(item, index) in tableColumn" :type="item.type" :key="index" :prop="item.prop"
+          :width="item.width" :label="item.label">
+          <template v-if="item.type === 'expand'" #default="scope">
+            <slot name="expand" :scope="scope"></slot>
+          </template>
           <template v-if="item.headerSlot" #header="scope">
             <slot :name="item.headerSlot" :scope="scope"></slot>
           </template>
@@ -26,8 +32,8 @@
 import { defineComponent, ref, onMounted, ExtractPropTypes, SetupContext } from 'vue'
 import { IPaginationData } from './interface'
 import { props } from './props'
-export type ComponentProps = ExtractPropTypes<typeof props>
-const paginationChange = (paginationData: IPaginationData, ctx: SetupContext) => {
+type ComponentProps = ExtractPropTypes<typeof props>
+const usePaginationChange = (paginationData: IPaginationData, ctx: SetupContext) => {
   const handleCurrentChange = (val: number) => {
     ctx.emit('paginationDataChange', {
       page: val,
@@ -42,6 +48,18 @@ const paginationChange = (paginationData: IPaginationData, ctx: SetupContext) =>
   }
   return { handleSizeChange, handleCurrentChange }
 }
+const useSelect = (ctx: SetupContext) => {
+  const select = (selection: object[], row: object) => {
+    ctx.emit('select', selection, row)
+  }
+  const selectAll = (selection: object[]) => {
+    ctx.emit('select-all', selection)
+  }
+  const selectionChange = (selection: object[]) => {
+    ctx.emit('selection-change', selection)
+  }
+  return { select, selectAll, selectionChange }
+}
 export default defineComponent({
   props,
   setup (props: ComponentProps, ctx: SetupContext) {
@@ -50,9 +68,10 @@ export default defineComponent({
     onMounted(() => {
       tableMinWidth.value = elPagination?.value?.$el.clientWidth || 0
     })
-    const { handleCurrentChange, handleSizeChange } = paginationChange(props.paginationData, ctx)
+    const { handleCurrentChange, handleSizeChange } = usePaginationChange(props.paginationData, ctx)
+    const { select, selectAll, selectionChange } = useSelect(ctx)
     return {
-      elPagination, tableMinWidth, handleSizeChange, handleCurrentChange
+      elPagination, tableMinWidth, handleSizeChange, handleCurrentChange, select, selectAll, selectionChange
     }
   }
 })

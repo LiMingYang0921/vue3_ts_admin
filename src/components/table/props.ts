@@ -7,6 +7,8 @@ export const props = {
   },
   tableData: Array,
   tableColumn: Array as PropType<Array<ITableColumn>>,
+  border: Boolean,
+  height: [Number, String],
   paginationData: {
     require: true,
     type: Object as PropType<IPaginationData>,

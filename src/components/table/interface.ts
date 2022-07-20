@@ -5,7 +5,7 @@ interface IPaginationData {
 }
 
 interface ITableColumn {
-  label: string,
+  label?: string,
   prop?: string,
   type?: string,
   index?: string | ((index: number) => void),
