@@ -13,7 +13,7 @@ interface ITableColumn {
   width?: string | number,
   minWidth?: string | number,
   fixed?: string | boolean,
-  sortable?: boolean | string,
+  sortable?: boolean | 'custom',
   sortMethod?: (a: number, b: number) => number,
   align?: 'left' | 'center' | 'right',
   className?: string,

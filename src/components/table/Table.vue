@@ -4,18 +4,36 @@
     <div class="table_box">
       <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData" :border="border"
         :height="height" @selection-change="selectionChange" @select="select" @select-all="selectAll">
-        <el-table-column v-for="(item, index) in tableColumn" :type="item.type" :key="index" :prop="item.prop"
-          :width="item.width" :label="item.label">
-          <template v-if="item.type === 'expand'" #default="scope">
-            <slot name="expand" :scope="scope"></slot>
-          </template>
-          <template v-if="item.headerSlot" #header="scope">
-            <slot :name="item.headerSlot" :scope="scope"></slot>
-          </template>
-          <template v-if="item.slot" #default="scope">
-            <slot :name="item.slot" :scope="scope" />
-          </template>
-        </el-table-column>
+        <template v-for="(item, index) in tableColumn" :key="index">
+          <el-table-column v-if="item.type === 'selection' || item.type === 'index'" :type="item.type"
+            :label="item.label" :width="item.width" :min-width="item.minWidth" :sortable="item.sortable"
+            :sort-method="item.sortMethod" :align="item.align" :class-name="item.className">
+          </el-table-column>
+          <el-table-column v-else-if="item.type === 'expand'" :prop="item.prop" :type="item.type" :label="item.label"
+            :width="item.width" :min-width="item.minWidth" :sortable="item.sortable" :sort-method="item.sortMethod"
+            :align="item.align" :class-name="item.className">
+            <template #default="scope">
+              <slot name="expand" :scope="scope"></slot>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="item.headerSlot || item.slot" :prop="item.prop" :type="item.type" :label="item.label"
+            :width="item.width" :min-width="item.minWidth" :sortable="item.sortable" :sort-method="item.sortMethod"
+            :align="item.align" :class-name="item.className">
+            <template v-if="item.headerSlot" #header="scope">
+              <slot :name="item.headerSlot" :scope="scope"></slot>
+            </template>
+            <template v-if="item.slot" #default="scope">
+              <slot :name="item.slot" :scope="scope" />
+            </template>
+          </el-table-column>
+          <el-table-column v-else :prop="item.prop" :type="item.type" :label="item.label" :width="item.width"
+            :min-width="item.minWidth" :sortable="item.sortable" :sort-method="item.sortMethod" :align="item.align"
+            :class-name="item.className">
+            <template v-if="item.slot" #default="scope">
+              <slot :name="item.slot" :scope="scope" />
+            </template>
+          </el-table-column>
+        </template>
       </el-table>
     </div>
     <div class="pagination">
@@ -63,6 +81,8 @@ const useSelect = (ctx: SetupContext) => {
 export default defineComponent({
   props,
   setup (props: ComponentProps, ctx: SetupContext) {
+    console.log(ctx.slots)
+    const slots = ctx.slots
     const elPagination = ref()
     const tableMinWidth = ref<number>(0)
     onMounted(() => {
@@ -71,7 +91,7 @@ export default defineComponent({
     const { handleCurrentChange, handleSizeChange } = usePaginationChange(props.paginationData, ctx)
     const { select, selectAll, selectionChange } = useSelect(ctx)
     return {
-      elPagination, tableMinWidth, handleSizeChange, handleCurrentChange, select, selectAll, selectionChange
+      slots, elPagination, tableMinWidth, handleSizeChange, handleCurrentChange, select, selectAll, selectionChange
     }
   }
 })

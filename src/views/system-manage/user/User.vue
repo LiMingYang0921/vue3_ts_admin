@@ -10,7 +10,7 @@
         </div>
       </template>
       <template v-slot:dateHeader>
-        <a href="">姓名</a>
+        <a href="">时间</a>
       </template>
       <template v-slot:nameHeader>
         <a href="">姓名</a>
@@ -35,9 +35,9 @@ export default defineComponent({
   setup () {
     const loading = ref<boolean>(false)
     const tableColumn = reactive<Array<ITableColumn>>([
-      {
-        type: 'expand'
-      },
+      // {
+      //   type: 'expand'
+      // },
       {
         label: '时间',
         prop: 'date',
