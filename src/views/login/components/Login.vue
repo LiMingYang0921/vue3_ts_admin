@@ -45,6 +45,7 @@ import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { utilValidatePhone } from '@/utils/util'
+import request from '@/api/index'
 
 const effectForm = () => {
   const router = useRouter()
@@ -84,17 +85,19 @@ const effectForm = () => {
     if (!ruleFormRef.value) return
     await ruleFormRef.value.validate((valid) => {
       if (valid) {
-        console.log('submit!')
         loading.value = true
-        setTimeout(() => {
-          localStorage.token = 'token'
-          router.push('/')
+        request.XHRLogin(ruleForm).then((res) => {
+          if (res.code === 200) {
+            localStorage.token = 'token'
+            router.push('/')
+            ElMessage({
+              message: '登入成功',
+              type: 'success'
+            })
+          }
+        }).finally(() => {
           loading.value = false
-          ElMessage({
-            message: '登入成功',
-            type: 'success'
-          })
-        }, 1500)
+        })
       }
     })
   }
@@ -105,7 +108,6 @@ const effectForm = () => {
 export default defineComponent({
   setup (props, ctx) {
     const { loading, ruleForm, rules, ruleFormRef, submitForm } = effectForm()
-
     const goRegisterClick = () => {
       ctx.emit('goRegister')
     }
