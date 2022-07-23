@@ -3,7 +3,8 @@
   <div class="table_page">
     <div class="table_box">
       <el-table v-loading="loading" :style="{ minWidth: `${tableMinWidth}px` }" :data="tableData" :border="border"
-        :height="height" @selection-change="selectionChange" @select="select" @select-all="selectAll">
+        :height="height" @selection-change="selectionChange" @select="select" @select-all="selectAll"
+        @sort-change="sortChange">
         <template v-for="(item, index) in tableColumn" :key="index">
           <el-table-column v-if="item.type === 'selection' || item.type === 'index'" :type="item.type"
             :label="item.label" :width="item.width" :min-width="item.minWidth" :sortable="item.sortable"
@@ -78,6 +79,12 @@ const useSelect = (ctx: SetupContext) => {
   }
   return { select, selectAll, selectionChange }
 }
+const useSortChange = (ctx: SetupContext) => {
+  const sortChange = (column: any, prop: any, order: any) => {
+    ctx.emit('sort-change', column, prop, order)
+  }
+  return { sortChange }
+}
 export default defineComponent({
   props,
   setup (props: ComponentProps, ctx: SetupContext) {
@@ -89,8 +96,9 @@ export default defineComponent({
     })
     const { handleCurrentChange, handleSizeChange } = usePaginationChange(props.paginationData, ctx)
     const { select, selectAll, selectionChange } = useSelect(ctx)
+    const { sortChange } = useSortChange(ctx)
     return {
-      slots, elPagination, tableMinWidth, handleSizeChange, handleCurrentChange, select, selectAll, selectionChange
+      slots, elPagination, tableMinWidth, handleSizeChange, handleCurrentChange, select, selectAll, selectionChange, sortChange
     }
   }
 })

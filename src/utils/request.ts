@@ -46,7 +46,7 @@ service.interceptors.response.use((res: AxiosResponse) => {
   return res.data
 }, error => {
   const err = error.response.data && error.response.data.apifoxError
-  ElMessage.error(err.message)
+  ElMessage.error(err?.message || '服务器异常')
   if (err.code === 401) {
     logout()
   }

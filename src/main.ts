@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 
 import '@/assets/reset.css'
-import './assets/js/element.ts'
+import '@/config/theme'
 import '@/assets/style/theme.scss'
 
 import '@/utils/request'

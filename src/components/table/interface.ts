@@ -18,7 +18,7 @@ interface ITableColumn {
   align?: 'left' | 'center' | 'right',
   className?: string,
   headerSlot?: string,
-  slot?: string
+  slot?: string,
 }
 
 export { IPaginationData, ITableColumn }

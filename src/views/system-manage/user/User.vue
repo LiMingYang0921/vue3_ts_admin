@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <Table :loading="loading" :tableData="tableData" :tableColumn="tableColumn" :paginationData="paginationData"
-      :selection="true" @paginationDataChange="paginationDataChange">
+      :selection="true" @paginationDataChange="paginationDataChange" @sort-change="sortChange">
     </Table>
   </div>
 </template>
@@ -21,41 +21,22 @@ const useGetUserList = () => {
     limit: 10,
     total: 0
   })
-  const tableColumn = reactive<Array<ITableColumn>>([
-    {
-      label: '姓名',
-      prop: 'name'
-    },
-    {
-      label: '手机号',
-      prop: 'phone'
-    },
-    {
-      label: '邮箱',
-      prop: 'email'
-    },
-    {
-      label: '身份证号',
-      prop: 'IDCard'
-    },
-    {
-      label: '地址',
-      prop: 'address'
-    },
-    {
-      label: '出生日期',
-      prop: 'registrationTime'
-    },
-    {
-      label: '角色',
-      prop: 'role'
-    }
-  ])
+  interface ISort {
+    order: 'ascending' | 'descending' | '',
+    prop: 'registrationTime'
+  }
+  const sort = reactive<ISort>({
+    order: '',
+    prop: 'registrationTime'
+  })
   const getUserList = () => {
     loading.value = true
     const data = {
-      page: paginationData.page,
-      limit: paginationData.limit
+      pagination: {
+        page: paginationData.page,
+        limit: paginationData.limit
+      },
+      sort
     }
     request.XHRGetUserList(data).then((res: any) => {
       if (res.code === 200) {
@@ -72,19 +53,58 @@ const useGetUserList = () => {
     paginationData.limit = data.limit
     getUserList()
   }
-  return { loading, tableColumn, tableData, paginationData, paginationDataChange }
+
+  const sortChange = (column: any) => {
+    sort.order = column.order
+    sort.prop = column.prop
+    getUserList()
+  }
+  return { loading, tableData, paginationData, paginationDataChange, sortChange }
 }
 
 export default defineComponent({
   components: { Table },
   setup () {
-    const { loading, tableData, tableColumn, paginationData, paginationDataChange } = useGetUserList()
+    const tableColumn = reactive<Array<ITableColumn>>([
+      {
+        label: '姓名',
+        prop: 'name'
+      },
+      {
+        label: '手机号',
+        prop: 'phone'
+      },
+      {
+        label: '邮箱',
+        prop: 'email'
+      },
+      {
+        label: '身份证号',
+        prop: 'IDCard'
+      },
+      {
+        label: '地址',
+        prop: 'address'
+      },
+      {
+        label: '出生日期',
+        prop: 'registrationTime',
+        sortable: 'custom'
+      },
+      {
+        label: '角色',
+        prop: 'role'
+      }
+    ])
+
+    const { loading, tableData, paginationData, paginationDataChange, sortChange } = useGetUserList()
     return {
       tableData,
       tableColumn,
       paginationData,
       loading,
-      paginationDataChange
+      paginationDataChange,
+      sortChange
     }
   }
 })
