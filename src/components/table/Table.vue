@@ -81,7 +81,6 @@ const useSelect = (ctx: SetupContext) => {
 export default defineComponent({
   props,
   setup (props: ComponentProps, ctx: SetupContext) {
-    console.log(ctx.slots)
     const slots = ctx.slots
     const elPagination = ref()
     const tableMinWidth = ref<number>(0)

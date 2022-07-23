@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import config from '@/config/http'
 import { ElMessage } from 'element-plus'
-import router from '@/router/index'
+import { logout } from '@/utils/useUser'
 
 interface IOptions {
   url: string,
-  method: 'post' | 'get',
+  method: 'post' | 'get' | 'put' | 'delete',
   mock: boolean,
   data?: object,
   params?: object
@@ -17,10 +17,9 @@ const service = axios.create({
   timeout: 3000
 })
 
-const token = 'uhdfgighkdjghdlkfhugkj'
+const token = localStorage.getItem('token')
 
 const errorHandler = (error: { message: string }) => {
-  console.log(`err${error}`)
   ElMessage.error(error.message)
   return Promise.reject(error)
 }
@@ -37,17 +36,22 @@ service.interceptors.request.use((config) => {
 
 // 响应拦截
 service.interceptors.response.use((res: AxiosResponse) => {
-  console.log(123123123)
   const { code, message } = res.data
-  console.log('res.data', res.data)
   if (code !== 200) {
     ElMessage.error(message)
     if (code === 401) {
-      router.push('/login')
+      logout()
     }
   }
   return res.data
-}, errorHandler)
+}, error => {
+  const err = error.response.data
+  ElMessage.error(err.message)
+  if (err.code === 401) {
+    logout()
+  }
+  return Promise.reject(error)
+})
 
 function request (options: IOptions) {
   if (typeof options.mock !== 'undefined') {

@@ -88,7 +88,7 @@ const effectForm = () => {
         loading.value = true
         request.XHRLogin(ruleForm).then((res) => {
           if (res.code === 200) {
-            localStorage.token = 'token'
+            localStorage.token = res.token
             router.push('/')
             ElMessage({
               message: '登入成功',

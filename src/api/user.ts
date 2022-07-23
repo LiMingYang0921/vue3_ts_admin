@@ -8,5 +8,19 @@ export default {
       data: params,
       mock: true
     })
+  },
+  XHRLogout () {
+    return request({
+      url: '/logout',
+      method: 'get',
+      mock: true
+    })
+  },
+  XHRUserInfo () {
+    return request({
+      url: '/userinfo',
+      method: 'get',
+      mock: true
+    })
   }
 }

@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
+    userInfo: {},
     menuIsCollapse: false
   },
   getters: {
@@ -15,6 +16,9 @@ export default createStore({
     }
   },
   mutations: {
+    setUserInfo (state, userInfo) {
+      state.userInfo = userInfo
+    },
     setMenuIsCollapse (state) {
       state.menuIsCollapse = !state.menuIsCollapse
     }
