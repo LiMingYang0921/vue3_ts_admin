@@ -45,7 +45,7 @@ service.interceptors.response.use((res: AxiosResponse) => {
   }
   return res.data
 }, error => {
-  const err = error.response.data
+  const err = error.response.data && error.response.data.apifoxError
   ElMessage.error(err.message)
   if (err.code === 401) {
     logout()

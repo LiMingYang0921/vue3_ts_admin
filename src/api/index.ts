@@ -1,2 +1,3 @@
 import user from './user'
-export default { ...user }
+import userManage from './user_manage'
+export default { ...user, ...userManage }

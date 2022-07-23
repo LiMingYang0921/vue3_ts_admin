@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 export default {
-  XHRLogin (params: object) {
+  XHRLogin (data: object) {
     return request({
       url: '/login',
       method: 'post',
-      data: params,
+      data,
       mock: true
     })
   },
