@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column v-if="item.headerSlot || item.slot" :prop="item.prop" :type="item.type" :label="item.label"
             :width="item.width" :min-width="item.minWidth" :sortable="item.sortable" :sort-method="item.sortMethod"
-            :align="item.align" :class-name="item.className">
+            :align="item.align" :class-name="item.className" :formatter="item.formatter">
             <template v-if="item.headerSlot" #header="scope">
               <slot :name="item.headerSlot" :scope="scope"></slot>
             </template>
@@ -29,7 +29,7 @@
           </el-table-column>
           <el-table-column v-else :prop="item.prop" :type="item.type" :label="item.label" :width="item.width"
             :min-width="item.minWidth" :sortable="item.sortable" :sort-method="item.sortMethod" :align="item.align"
-            :class-name="item.className">
+            :class-name="item.className" :formatter="item.formatter">
             <template v-if="item.slot" #default="scope">
               <slot :name="item.slot" :scope="scope" />
             </template>
@@ -80,8 +80,8 @@ const useSelect = (ctx: SetupContext) => {
   return { select, selectAll, selectionChange }
 }
 const useSortChange = (ctx: SetupContext) => {
-  const sortChange = (column: any, prop: any, order: any) => {
-    ctx.emit('sort-change', column, prop, order)
+  const sortChange = (column: any) => {
+    ctx.emit('sort-change', column)
   }
   return { sortChange }
 }

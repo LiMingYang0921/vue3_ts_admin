@@ -5,7 +5,7 @@ import store from './store'
 
 import '@/assets/reset.css'
 import '@/config/theme'
-import '@/assets/style/theme.scss'
+import '@/assets/style/public.scss'
 
 import '@/utils/request'
 

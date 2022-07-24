@@ -2,6 +2,9 @@
   <div class="user">
     <Table :loading="loading" :tableData="tableData" :tableColumn="tableColumn" :paginationData="paginationData"
       :selection="true" @paginationDataChange="paginationDataChange" @sort-change="sortChange">
+      <template v-slot:roleHeader="{}">
+        <TableFilter name="角色" :filterList="[]" :queryValue="query.role" queryLabel="role" @setQuery="setQuery" />
+      </template>
     </Table>
   </div>
 </template>
@@ -10,8 +13,10 @@
 import { defineComponent, reactive, ref } from 'vue'
 
 import Table from '@/components/table/Table.vue'
-import { IPaginationData, ITableColumn } from '@/components/table/interface'
+import TableFilter from '@/components/table_filter/TableFilter.vue'
+import { IPaginationData, ITableColumn, ISort } from '@/components/table/interface'
 import request from '@/api/index'
+import { roleList } from '@/utils/data'
 
 const useGetUserList = () => {
   const loading = ref<boolean>(false)
@@ -21,13 +26,19 @@ const useGetUserList = () => {
     limit: 10,
     total: 0
   })
-  interface ISort {
-    order: 'ascending' | 'descending' | '',
-    prop: 'registrationTime'
+  interface IQuery {
+    role: Array<number>
   }
+  interface IQueryItem {
+    label: 'role',
+    value: any
+  }
+  const query = reactive<IQuery>({
+    role: []
+  })
   const sort = reactive<ISort>({
     order: '',
-    prop: 'registrationTime'
+    prop: ''
   })
   const getUserList = () => {
     loading.value = true
@@ -36,7 +47,8 @@ const useGetUserList = () => {
         page: paginationData.page,
         limit: paginationData.limit
       },
-      sort
+      sort,
+      query
     }
     request.XHRGetUserList(data).then((res: any) => {
       if (res.code === 200) {
@@ -59,12 +71,23 @@ const useGetUserList = () => {
     sort.prop = column.prop
     getUserList()
   }
-  return { loading, tableData, paginationData, paginationDataChange, sortChange }
+
+  const setQuery = (e: IQueryItem) => {
+    query[e.label] = e.value
+    getUserList()
+  }
+  return { loading, tableData, paginationData, query, paginationDataChange, sortChange, setQuery }
 }
 
 export default defineComponent({
-  components: { Table },
+  components: { Table, TableFilter },
   setup () {
+    const formatter = (row: any, column: any, cellValue: any, index: number) => {
+      const text = roleList.find((item) => {
+        return item.value === cellValue
+      })?.text
+      return text
+    }
     const tableColumn = reactive<Array<ITableColumn>>([
       {
         label: '姓名',
@@ -93,18 +116,26 @@ export default defineComponent({
       },
       {
         label: '角色',
-        prop: 'role'
+        prop: 'role',
+        headerSlot: 'roleHeader',
+        formatter: formatter
       }
     ])
 
-    const { loading, tableData, paginationData, paginationDataChange, sortChange } = useGetUserList()
+    const { loading, tableData, paginationData, query, paginationDataChange, sortChange, setQuery } = useGetUserList()
+    const click = (scope: any) => {
+      console.log(scope)
+    }
     return {
       tableData,
       tableColumn,
       paginationData,
       loading,
+      query,
       paginationDataChange,
-      sortChange
+      sortChange,
+      click,
+      setQuery
     }
   }
 })

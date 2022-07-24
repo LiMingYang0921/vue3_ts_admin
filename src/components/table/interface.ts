@@ -19,6 +19,12 @@ interface ITableColumn {
   className?: string,
   headerSlot?: string,
   slot?: string,
+  formatter?: (row: any, column: any, cellValue: any, index: number) => string | number | undefined
 }
 
-export { IPaginationData, ITableColumn }
+interface ISort {
+  order: 'ascending' | 'descending' | '',
+  prop: string
+}
+
+export { IPaginationData, ITableColumn, ISort }

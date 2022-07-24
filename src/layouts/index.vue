@@ -39,7 +39,6 @@ export default defineComponent({
   .menu {
     height: 100vh;
     overflow-y: hidden;
-
   }
 
   .content {
