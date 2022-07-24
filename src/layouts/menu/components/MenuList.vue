@@ -27,17 +27,20 @@
 </template>
 
 <script lang="ts" setup>
+import { AllRoutes } from '@/router/index'
 import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { Menu as IconMenu, Location } from '@element-plus/icons-vue'
+
+console.log(AllRoutes)
 
 const store = useStore()
 const router = useRouter()
 const routerList = router.getRoutes()
 
 const menuRouterList = reactive(
-  routerList.find((item) => item.name === 'home')?.children || []
+  AllRoutes.find((item) => item.name === 'home')?.children || []
 )
 
 const handleOpen = (key: string, keyPath: string[]) => {
