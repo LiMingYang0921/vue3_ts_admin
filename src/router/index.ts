@@ -1,14 +1,14 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
-interface IMenubarList {
+export interface IMenubarList {
+  name?: string
   parentId?: number | string
   id?: number | string
-  name: string
-  path: string
-  redirect?: string | { name: string }
+  path?: string
+  redirect?: string
   meta?: {
-    icon: string
-    title: string
+    title?: string
+    icon?: string
     showInMenu?: boolean,
     permission?: string[]
     activeMenu?: string // 路由设置了该属性，则会高亮相对应的侧边栏
@@ -41,19 +41,19 @@ export const AllRoutes: Array<IMenubarList> = [
           {
             path: '/system-manage/user',
             name: 'user',
-            component: () => import('@/views/system-manage/user/User.vue'),
+            component: () => import('@/views/user/User.vue'),
             meta: { title: '用户管理', icon: 'el-icon-tools' }
           },
           {
             path: '/system-manage/menu',
             name: 'menu',
-            component: () => import('@/views/system-manage/menu/Menu.vue'),
+            component: () => import('@/views/menu/Menu.vue'),
             meta: { title: '菜单管理', icon: 'el-icon-tools' }
           },
           {
             path: '/system-manage/role',
             name: 'role',
-            component: () => import('@/views/system-manage/role/Role.vue'),
+            component: () => import('@/views/role/Role.vue'),
             meta: { title: '角色管理', icon: 'el-icon-tools' }
           }
         ]
@@ -72,9 +72,9 @@ export const AllRoutes: Array<IMenubarList> = [
     component: () => import('../views/error/404.vue')
   },
   {
-    path: '/401',
-    name: '401',
-    component: () => import('../views/error/401.vue')
+    path: '/403',
+    name: '403',
+    component: () => import('../views/error/403.vue')
   }
 ]
 

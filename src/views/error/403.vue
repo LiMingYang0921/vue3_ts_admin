@@ -1,13 +1,13 @@
 <template>
   <div class="box">
-    <img src="@/assets/images/404.png" alt="" />
     <div class="text">
-      <h2 class="text1">伙计，你好像走错路了，这里是派大星的大脑，这里什么都没有，更没有蟹黄堡秘方</h2>
-      <h6 class="text2">
-        你最好检查一下你输入的网址是否正确，或者点击下方按钮返回首页。
-      </h6>
+      <h2 class="text1">
+        海绵宝宝说：“嘿，痞老板，给我站住。你不能进去偷蟹黄堡的秘方”
+      </h2>
+      <h6 class="text2">“你最好点击下面赶紧回去”</h6>
       <el-button type="primary" round class="button" @click="goHomeClick">回首页</el-button>
     </div>
+    <img src="@/assets/images/403.gif" alt="" />
   </div>
 </template>
 
@@ -34,11 +34,6 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   height: 100vh;
-  padding: 0 20px;
-
-  img {
-    width: 30vw;
-  }
 
   .text {
     padding: 0 20px;
