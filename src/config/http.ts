@@ -1,11 +1,11 @@
 const env = process.env.NODE_ENV === 'development' ? 'dev' : 'prod'
 const EnvConfig = {
   dev: {
-    baseApi: 'http://localhost:3001',
+    baseApi: '',
     mockApi: 'http://127.0.0.1:4523/m1/1329976-0-default'
   },
   prod: {
-    baseApi: 'http://localhost:3001',
+    baseApi: '',
     mockApi: ''
   }
 }

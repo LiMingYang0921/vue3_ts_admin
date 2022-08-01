@@ -3,17 +3,14 @@
     <span class="title">
       <a :class="{ chosen: queryValue?.length ? 'blue' : '' }">{{ title }}</a>
       <el-icon class="icon">
-        <ArrowDown v-show="iconDown" />
-        <ArrowUp v-show="!iconDown" />
+        <el-icon>
+          <Search />
+        </el-icon>
       </el-icon>
     </span>
     <template #dropdown>
       <div>
-        <el-checkbox-group class="check_group" v-model="checkList" @change="change">
-          <el-checkbox class="el-checkbox " v-for="item in filterList" :label="item.value" :key="item.value">
-            {{ item.text }}
-          </el-checkbox>
-        </el-checkbox-group>
+        <el-input class="input" v-model="searchInput" size="small" />
         <div class="bottom">
           <el-button type="primary" link @click="confirmClick"> 确认 </el-button>
           <el-button type="info" link @click="resetClick"> 重置 </el-button>
@@ -24,62 +21,42 @@
 </template>
 
 <script lang="ts">
-import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import { defineComponent, PropType, ref } from 'vue'
-import { IFilterList } from '@/utils/data'
+import { Search } from '@element-plus/icons-vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  components: { ArrowDown, ArrowUp },
+  components: { Search },
   props: {
     name: {
       required: true,
       default: ''
     },
-    filterList: {
-      required: true,
-      type: Array as PropType<Array<IFilterList>>
-    },
     queryValue: {
       required: true,
-      type: Array as PropType<Array<number | string>>
+      type: String
     },
     queryLabel: {
       required: true,
       default: '',
       type: String
-    },
-    radio: {
-      type: Boolean,
-      require: false,
-      default: false
     }
   },
   setup (props, ctx) {
-    const checkList = ref()
-    const title = ref<string | undefined>(props.name)
-    const change = () => {
-      if (props.radio) {
-        const len = checkList.value.length
-        if (len > 1) {
-          checkList.value = [checkList.value[len - 1]]
-        }
-      }
-    }
+    const searchInput = ref('')
+    let title = ref<string>(props.name)
     const dropdown = ref()
     const confirmClick = () => {
-      if (checkList.value?.length === 1) {
-        title.value = props.filterList.find((item) => {
-          return item.value === checkList.value[0]
-        })?.text
+      if (searchInput.value) {
+        title = searchInput
       } else {
         title.value = props.name
       }
-      ctx.emit('setQuery', { label: props.queryLabel, value: checkList.value })
+      ctx.emit('setQuery', { label: props.queryLabel, value: searchInput.value })
       dropdown.value.handleClose()
     }
     const resetClick = () => {
       title.value = props.name
-      ctx.emit('setQuery', { label: props.queryLabel, value: [] })
+      ctx.emit('setQuery', { label: props.queryLabel, value: '' })
       dropdown.value.handleClose()
     }
     const iconDown = ref<boolean>(true)
@@ -89,10 +66,10 @@ export default defineComponent({
       } else {
         iconDown.value = true
       }
-      checkList.value = props.queryValue
+      searchInput.value = props.queryValue
     }
     return {
-      title, iconDown, checkList, change, dropdown, confirmClick, resetClick, visibleChange
+      title, iconDown, searchInput, dropdown, confirmClick, resetClick, visibleChange
     }
   }
 })
@@ -108,18 +85,12 @@ export default defineComponent({
   .icon {
     position: relative;
     top: 4px;
+    font-size: 12px;
   }
 }
 
-.check_group {
-  display: flex;
-  flex-direction: column;
+.input {
   padding: 10px;
-
-  .el-checkbox {
-    margin: 0;
-    padding-right: 8px;
-  }
 }
 
 .bottom {
