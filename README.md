@@ -1,4 +1,4 @@
-# backend_system
+# vue3_ts_admin
 
 ## Project setup
 ```
