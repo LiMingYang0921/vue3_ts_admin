@@ -46,6 +46,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { utilValidatePhone } from '@/utils/util'
 import request from '@/api/index'
+import { Md5 } from 'ts-md5/dist/md5'
 
 const effectForm = () => {
   const router = useRouter()
@@ -86,18 +87,24 @@ const effectForm = () => {
     await ruleFormRef.value.validate((valid) => {
       if (valid) {
         loading.value = true
-        request.XHRLogin(ruleForm).then((res) => {
-          if (res.code === 200) {
-            localStorage.token = res.token
-            router.push('/')
-            ElMessage({
-              message: '登入成功',
-              type: 'success'
-            })
-          }
-        }).finally(() => {
-          loading.value = false
-        })
+        request
+          .XHRLogin({
+            account: ruleForm.account,
+            password: Md5.hashStr(ruleForm.password)
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              localStorage.token = res.token
+              router.push('/')
+              ElMessage({
+                message: '登入成功',
+                type: 'success'
+              })
+            }
+          })
+          .finally(() => {
+            loading.value = false
+          })
       }
     })
   }
